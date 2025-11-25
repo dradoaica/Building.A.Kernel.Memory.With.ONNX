@@ -16,16 +16,14 @@ using Microsoft.SemanticKernel.Connectors.Onnx;
  * 4. Run the code
  *
  */
-var onnxTextGenerationModelDir = GetFullPathToModelDir("phi-4-onnx/gpu/gpu-int4-rtn-block-32");
-var onnxTextEmbeddingGenerationModelPath = GetFullPathToModelFilePath("bge-micro-v2/onnx", "model.onnx");
-var onnxTextEmbeddingGenerationVocabPath = GetFullPathToModelFilePath("bge-micro-v2", "vocab.txt");
 try
 {
     // 1. Configure ONNX Text Generation (Phi-4)
     ConsoleHelper.ConsoleWriterSection("Configuring ONNX Text Generation (Phi-4)...");
+    var textModelDir = GetFullPathToModelDir("phi-4-onnx/gpu/gpu-int4-rtn-block-32");
     var onnxConfig = new OnnxConfig
     {
-        TextModelDir = onnxTextGenerationModelDir,
+        TextModelDir = textModelDir,
         MaxTokens = 16384,
     };
     Console.WriteLine($"Text Model Directory: {onnxConfig.TextModelDir}");
@@ -36,13 +34,15 @@ try
         CaseSensitive = false,
         MaximumTokens = 512,
     };
+    var onnxModelPath = GetFullPathToModelFilePath("bge-micro-v2/onnx", "model.onnx");
+    var vocabPath = GetFullPathToModelFilePath("bge-micro-v2", "vocab.txt");
     var bgeEmbeddingGenerator = BertOnnxTextEmbeddingGenerationService.Create(
-        onnxTextEmbeddingGenerationModelPath,
-        onnxTextEmbeddingGenerationVocabPath,
+        onnxModelPath,
+        vocabPath,
         bertOnnxOptions
     );
-    Console.WriteLine($"ONNX Model Path: {onnxTextEmbeddingGenerationModelPath}");
-    Console.WriteLine($"Vocab Path: {onnxTextEmbeddingGenerationVocabPath}");
+    Console.WriteLine($"ONNX Model Path: {onnxModelPath}");
+    Console.WriteLine($"Vocab Path: {vocabPath}");
     // 3. Build Kernel Memory
     ConsoleHelper.ConsoleWriterSection("Building Kernel Memory...");
     var memoryBuilder = new KernelMemoryBuilder().WithOnnxTextGeneration(onnxConfig)
@@ -54,7 +54,7 @@ try
                     MaxTokenTotal = 512,
                 },
 #pragma warning disable KMEXP00
-                new BertTextTokenizer(BertTokenizer.Create(onnxTextEmbeddingGenerationVocabPath))
+                new BertTextTokenizer(BertTokenizer.Create(vocabPath))
 #pragma warning restore KMEXP00
             )
         )
