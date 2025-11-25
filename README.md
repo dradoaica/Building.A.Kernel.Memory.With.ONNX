@@ -2,7 +2,7 @@
 
 ## Overview
 
-The application uses:
+The application `KernelMemoryOnnx` uses:
 
 - **Phi-4 (ONNX)**: For text generation (answering questions).
 - **BGE-Micro-v2 (ONNX)**: For text embedding generation (converting text to vectors).
@@ -28,9 +28,9 @@ Retrieval-Augmented Generation) pipeline without relying on external cloud APIs.
 ## Project Structure
 
 - **KernelMemoryOnnx**: The main console application.
-    - **Program.cs**: The main entry point. Configures Kernel Memory, imports data, and asks a question.
-    - **BertTextTokenizer.cs**: A custom tokenizer implementation using `BertTokenizer` for the embedding model.
     - **Common/ConsoleHelper.cs**: Helper methods for formatting console output.
+    - **BertTextTokenizer.cs**: A custom tokenizer implementation using `BertTokenizer` for the embedding model.
+    - **Program.cs**: The main entry point. Configures Kernel Memory, imports data, and asks a question.
 
 ## How to Run
 
